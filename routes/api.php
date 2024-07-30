@@ -17,18 +17,14 @@ use App\Http\Controllers\{
 
 // Public routes
 Route::post('/register', [UserController::class, 'register']);
-
 Route::post('/login', [UserController::class, 'login']);
-
 
 // Define the payment cancel route
 Route::get('/payment/cancel/{id}', [BookingController::class, 'handlePaymentCancel'])->name('payment.cancel');
-
 // Define the payment success route
 Route::get('/payment/success', function () {
     return view('payment.success');
 })->name('payment.success');
-
 // Define the payment callback route
 Route::get('/payment/callback/{id}', [BookingController::class, 'handlePaymentCallback'])->name('payment.callback');
 
@@ -44,13 +40,15 @@ Route::put('/bookings/{id}', [BookingController::class, 'update']);
 Route::delete('/bookings/{id}', [BookingController::class, 'destroy']);
 Route::put('/bookings/confirm/{id}', [BookingController::class, 'confirm']);
 Route::post('/bookings/{id}/initiate-payment', [BookingController::class, 'initiatePayment']);
-Route::get('/payment/success', function () {
-    return view('payment.success');
-})->name('payment.success');
 
-Route::get('/payment/cancel', function () {
-    return view('payment.cancel');
-})->name('payment.cancel');
+// Remove the duplicate payment success and cancel routes
+// Route::get('/payment/success', function () {
+//     return view('payment.success');
+// })->name('payment.success');
+
+// Route::get('/payment/cancel', function () {
+//     return view('payment.cancel');
+// })->name('payment.cancel');
 
 // Protected routes
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -68,8 +66,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/availabilities', [AvailabilityController::class, 'index'])->middleware('throttle:60,1');
     Route::post('/availabilities', [AvailabilityController::class, 'store'])->middleware('role:Admin');
     Route::delete('/availabilities/{date}', [AvailabilityController::class, 'destroy'])->middleware('role:Admin');
-
-
 
     // Review routes
     Route::get('/reviews', [ReviewController::class, 'index']);
