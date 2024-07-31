@@ -54,6 +54,8 @@ Route::post('/bookings/{id}/initiate-payment', [BookingController::class, 'initi
 Route::middleware(['auth:sanctum'])->group(function () {
     // Logout route
     Route::post('/logout', [UserController::class, 'logout']);
+    Route::get('/verify-email/{token}', [UserController::class, 'verifyEmail'])->name('verify.email');
+
 
     // Service routes
     Route::get('/services', [ServiceController::class, 'index']);

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
@@ -8,6 +7,8 @@ use App\Models\User;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Mail; // Add this line
+// use App\Mail\BookingNotification; // Add this line
 use App\Services\SemaphoreService;
 use App\Services\PayPalService;
 
@@ -43,8 +44,6 @@ class BookingController extends Controller
         ], 200);
     }
 
-
-    
     public function store(Request $request)
     {
         try {
@@ -82,6 +81,9 @@ class BookingController extends Controller
             $user = User::find($booking->UserID);
             $message = "Thank you for your booking, {$user->FirstName}. Your booking for {$booking->ServiceName} on {$booking->BookingDate} at {$booking->BookingTime} is confirmed.";
             $this->semaphoreService->sendSms($user->PhoneNumber, $message);
+
+            // Send booking notification email
+            // Mail::to($user->Email)->send(new BookingNotification($user, $booking));
 
             return response()->json(['booking' => $booking], 201);
         } catch (\Exception $e) {
